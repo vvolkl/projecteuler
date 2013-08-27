@@ -15,6 +15,19 @@ args = parser.parse_args()
 n=args.n
 start = time.time()
 
+
+from itertools import permutations
+
+i = 0
+for e in permutations(range(10)):
+    i = i + 1
+    if i == 1000000:
+        result = e
+        break
+result = ''.join(map(str,result))
+
+
+
 print 'result:'
 print result 
 print 'elapsed time:'
