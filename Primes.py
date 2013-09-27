@@ -1,5 +1,5 @@
 "Helper functions for prime calculations for projecteuler problems"
-
+import numpy as np
 
 def sieve(n):
     m = (n-1) // 2
@@ -41,3 +41,17 @@ def is_prime(n):
     return True
 
 
+def is_pent(num):
+    a = np.sqrt(1./36 + 2./3 * num)
+    b = 1./6 
+    
+    print "calculating n... ",np.ceil(a+b), a+b, b-a
+    return abs(np.ceil(a + b) - (a + b)) < 0.00001 #or abs(np.ceil(b - a) - (b-a)) < 0.00001
+
+def is_hex(num):
+    b = 0.25
+    a = np.sqrt( 0.0625 + num / 2.)
+    return abs(np.ceil(a + b) - (a + b)) < 0.00001 # or abs(np.ceil(b - a) - (b-a)) < 0.00001
+
+#if __name__ == "__main__":
+#	import numpy as np

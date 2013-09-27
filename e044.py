@@ -31,9 +31,20 @@ def pent(n):
 result = 0
 
 results = []
-pen = [a * (3 * a - 1) / 2 for a in range(1,n)]
-l =n 
-[[results.append(set([i,j]))  for i in range(max(0,j-10),j) if is_pent(abs(pent(j)-pent(i))) and is_pent(pent(j)+pent(i))] for j in range(l)]
+#pen = [a * (3 * a - 1) / 2 for a in range(1,n)]
+l = n 
+j = l 
+while not result:
+    j += 1 
+    if args.verbose:
+        print "checking bigger pent number", j
+    for i in range(0,j):
+        if is_pent(abs(pent(j)-pent(i))):
+            if is_pent(pent(j) + pent(i)):
+                result = (j,i)  
+
+
+#[[results.append(set([i,j]))  for i in range(0,j) if is_pent(abs(pent(j)-pent(i))) and is_pent(pent(j)+pent(i))] for j in range(l)]
 #su  = [[set([i,j])  for i in range(l) if abs(pen[i]+pen[j]) in pen ] for j in range(l)]
 #if args.verbose:
     #print pen[:10]
