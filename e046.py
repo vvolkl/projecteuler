@@ -14,11 +14,25 @@ parser.add_argument("-v","--verbose", help="increase output verbosity",
 args = parser.parse_args()
 n=args.n
 start = time.time()
-result = 0
+result = 1
 
 ######## 
 
+from Primes import is_prime, sieve
 
+for num in xrange(2,1000000):
+    if not is_prime(num) and num % 2:
+	result = 0
+        for e in sieve(num):
+            for f in xrange(int(np.ceil(np.sqrt((num-e)/2))+1)):
+                if args.verbose:
+                    print num, e, f, result
+                result += num == e + 2 * f**2 
+    if not result:
+        result = num
+        break
+                      
+        
 
 
 print 'result:'
