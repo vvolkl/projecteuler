@@ -21,11 +21,25 @@ result = 0
 import matplotlib.pyplot as plt
 
 plt.ion()
-from numpy.random import random_sample
+from numpy.random import random_integers
 import itertools
-def weighted_values(values, probabilities, size):
+def weighted_values(values, probabilities, total, size):
     bins = np.add.accumulate(probabilities)
-    return values[np.digitize(random_sample(size), bins)] 
+    #print probabilities
+    #print bins
+    #r =  random_integers(0, high=total-1,size=size)
+    #print r
+    #d = np.digitize(r, bins)
+    #print values
+    #print d
+    #print values[d]
+    #raw_input()
+    #return values[d]
+    return values[np.digitize(random_integers(1, high=total-1,size=size), bins)] 
+    #return values[np.digitize(random_integers(0, high=total,size=size), bins)] 
+    #print v
+    #return v
+
 
 m = np.loadtxt('matrix.txt', delimiter=',', dtype=int)
 p = np.zeros(m.shape, dtype=int)
@@ -75,19 +89,20 @@ def add_segment(pid,loc,p):
     tprob = np.sum([m[tuple(e)] for e in opt])
     #print opt,len(opt), tprob
     #print [m[tuple(e)] for e in opt]
-    probs = np.array([(tprob-m[tuple(e)])/tprob for e in opt])    
-    probs = probs / np.sum(probs)
+    probs = np.array([(tprob-m[tuple(e)]) for e in opt])    
+    #probs = probs #/ np.sum(probs)
     #TODO: rewrite weighted_values to accept integers
-    return np.array(weighted_values(np.array(opt), probs, 1)[0]), opt
+    return np.array(weighted_values(np.array(opt), probs,np.sum(probs), 1)[0]), opt
 
 
 def calc_pathsum(path1,path2,loc):
-
+    s = 0
     path1 = map(tuple, path1)
     path2 = map(tuple, path2)
-    s = np.sum(m[path2])
+    for e in path2:
+        s += m[e]
     for e in path1:
-        s += m[tuple(e)]
+        s += m[e]
         if np.allclose(e,loc):
             return s
 succ_path = np.zeros(p.shape)
@@ -123,7 +138,9 @@ class paths:
 
     def update(self,p,c):
         oldloc = self.loc
-        self.loc, self.env = add_segment(self.pid, self.loc,p) 
+        self.loc, self.env = add_segment(self.pid, self.loc,p)
+        if self.loc is None:
+            return None 
         ploc = p[tuple(self.loc)]
         #print self.loc, ploc
         if ploc == self.pid:
@@ -139,6 +156,7 @@ class paths:
             self.path.append(self.loc)
             self.counter += 1
             c[tuple(self.loc)] = self.counter
+            return True
         elif ploc == self.pid + 1:
             self.connloc = self.loc + dirs[c[tuple(self.loc)]]
             self.path = self.path[:c[tuple(self.connloc)]+1]
@@ -149,9 +167,16 @@ class paths:
             p[p == self.pid] = 0
             p[p == self.pid + 1] = 0
             rebuild_p(p,c, self.path, self.pid)
+            return True
         else:
             #implement merging routine here
-            pass
+            self.path.append(self.loc)
+            if c[tuple(self.loc)] < 0:
+                self.connloc = self.loc + dirs[c[tuple(self.loc)]]
+            else:
+                self.connloc = self.loc
+            
+            return False
         
 
 
@@ -162,6 +187,7 @@ a = paths(np.array([0,0]), pid=10)
 b = paths(np.array(m.shape)-1, pid=20)
 #a.allpaths = [path() for i in range(10)]
 
+#record 754109
 
 f = plt.figure()
 graph1 = f.add_subplot(111)
@@ -169,30 +195,44 @@ graph1 = f.add_subplot(111)
 g1 = graph1.matshow(p)
 #g2 = graph2.matshow(c)
     
-
+mres = 1e10
+result = 1e11
+winp = np.zeros(p.shape, p.dtype)
 #TODO: spawn more paths here
+for i in range(500):
+    p[:,:] = 0
+    c[:,:] = 0
+    a = paths(np.array([0,0]), pid=10)
+    b = paths(np.array(m.shape)-1, pid=20)
+    unconnected = True
+    while unconnected == True:
+        unconnected  = a.update(p,c)
+        if unconnected == False:
+            result = calc_pathsum(b.path, a.path, a.connloc)
+            if result == 2297:
+                print 'setting winp'
+                winp = p
+    
 
-for i in range(10):
-    for j in range(100):
-        a.update(p,c)
-        conn = connected(a.loc,b.path,b.pid)
-        if conn is not False:
-            print a.path[-1], b.path[-1]
-            done = 1
-            result = calc_pathsum(b.path,a.path,conn)
-
-        b.update(p,c)
-        conn = connected(b.loc,a.path,a.pid)
-        if conn is not False:
-            print a.path[-1], b.path[-1]
-            done = 1
-            result = calc_pathsum(a.path,b.path,conn)
-    g1.set_data(p)
-    plt.draw()
+            mres = min(mres, result)
+            break
+        if unconnected == True:
+            unconnected = b.update(p,c)
+            if unconnected == False:
+                result = calc_pathsum(a.path, b.path, b.connloc)
+                if result == 2297:
+                    print 'setting winp'
+                    winp = p
+        
+                mres  = min(mres, result)
+                break
+    print result, mres
     #g2.set_data(c)
     #plt.draw()
     
     #raw_input()
+g1.set_data(winp)
+plt.draw()
 
 """
 for trial in range(1):
