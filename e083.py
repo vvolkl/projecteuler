@@ -102,7 +102,7 @@ def rebuild_p(p, c, path, pid):
         for m in moves:
             if valid_move(loc + m, p.shape):
                 p[tuple(loc + m)] = pid + 1
-                c[tuple(loc + m)] = -3 - m[0] - 2 *  m[1] 
+                c[tuple(loc + m)] = -3 + m[0]  + 2 *  m[1] 
    
     count = 0
     for loc in path:
@@ -112,21 +112,23 @@ def rebuild_p(p, c, path, pid):
     
 
 class paths:
-    loc = np.zeros((2))
-    path = [loc]
+    #loc = np.zeros((2))
+    #path = [loc]
     counter = 1 
-    def __init__(self, pid=10):
+    def __init__(self,  loc, pid=10):
         self.pid = pid 
+        self.loc = loc
+        self.path = [loc]
         p[tuple(self.loc)] = self.pid
 
     def update(self,p,c):
         oldloc = self.loc
         self.loc, self.env = add_segment(self.pid, self.loc,p) 
         ploc = p[tuple(self.loc)]
-        print self.loc, ploc
+        #print self.loc, ploc
         if ploc == self.pid:
             return 'going back!'
-        if not ploc:
+        if ploc == 0:
             
             # mark neighbouring sites with a code to find the path
             for e in self.env:
@@ -147,27 +149,50 @@ class paths:
             p[p == self.pid] = 0
             p[p == self.pid + 1] = 0
             rebuild_p(p,c, self.path, self.pid)
-            
+        else:
+            #implement merging routine here
+            pass
+        
 
 
 class path(paths):
     pass
 
-a = paths()
+a = paths(np.array([0,0]), pid=10)
+b = paths(np.array(m.shape)-1, pid=20)
 #a.allpaths = [path() for i in range(10)]
 
 
 f = plt.figure()
-graph1 = f.add_subplot(211)
-graph2 = f.add_subplot(212) 
-for i in range(100):
-    a.update(p,c)
-    graph1.matshow(p)
-    graph2.matshow(c)
+graph1 = f.add_subplot(111)
+#graph2 = f.add_subplot(212)
+g1 = graph1.matshow(p)
+#g2 = graph2.matshow(c)
     
-    raw_input()
-    plt.draw()
 
+#TODO: spawn more paths here
+
+for i in range(10):
+    for j in range(100):
+        a.update(p,c)
+        conn = connected(a.loc,b.path,b.pid)
+        if conn is not False:
+            print a.path[-1], b.path[-1]
+            done = 1
+            result = calc_pathsum(b.path,a.path,conn)
+
+        b.update(p,c)
+        conn = connected(b.loc,a.path,a.pid)
+        if conn is not False:
+            print a.path[-1], b.path[-1]
+            done = 1
+            result = calc_pathsum(a.path,b.path,conn)
+    g1.set_data(p)
+    plt.draw()
+    #g2.set_data(c)
+    #plt.draw()
+    
+    #raw_input()
 
 """
 for trial in range(1):
