@@ -178,7 +178,9 @@ class paths:
             
             return False
         
-
+def merge():
+    #TODO
+    pass
 
 class path(paths):
     pass
@@ -197,21 +199,29 @@ g1 = graph1.matshow(p)
     
 mres = 1e10
 result = 1e11
-winp = np.zeros(p.shape, p.dtype)
+numpaths = m.shape[0]
 #TODO: spawn more paths here
 for i in range(500):
+
     p[:,:] = 0
     c[:,:] = 0
     a = paths(np.array([0,0]), pid=10)
     b = paths(np.array(m.shape)-1, pid=20)
+    pathlist = [a,b]
+    j = 3
+    while j < numpaths + 3:
+        xloc = random_integers(low=0, high=m.shape[0]-1,size=2)
+        if random_integers(low=1,high=maxentry,size=1) < maxentry - m[tuple(xloc)]:
+            pathlist.append(paths(np.array(xloc), pid=10*j))
+            j = j + 1
+
+    #### 
+    raw_input()
     unconnected = True
     while unconnected == True:
         unconnected  = a.update(p,c)
         if unconnected == False:
             result = calc_pathsum(b.path, a.path, a.connloc)
-            if result == 2297:
-                print 'setting winp'
-                winp = p
     
 
             mres = min(mres, result)
@@ -220,9 +230,6 @@ for i in range(500):
             unconnected = b.update(p,c)
             if unconnected == False:
                 result = calc_pathsum(a.path, b.path, b.connloc)
-                if result == 2297:
-                    print 'setting winp'
-                    winp = p
         
                 mres  = min(mres, result)
                 break
