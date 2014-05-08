@@ -23,31 +23,15 @@ import matplotlib.pyplot as plt
 plt.ion()
 from numpy.random import random_integers
 import itertools
+
 def weighted_values(values, probabilities, total, size):
     bins = np.add.accumulate(probabilities)
-    #print probabilities
-    #print bins
-    #r =  random_integers(0, high=total-1,size=size)
-    #print r
-    #d = np.digitize(r, bins)
-    #print values
-    #print d
-    #print values[d]
-    #raw_input()
-    #return values[d]
     return values[np.digitize(random_integers(1, high=total-1,size=size), bins)] 
-    #return values[np.digitize(random_integers(0, high=total,size=size), bins)] 
-    #print v
-    #return v
 
 
 m = np.loadtxt('matrix.txt', delimiter=',', dtype=int)
 p = np.zeros(m.shape, dtype=int)
-p[0,0] = 1
-p[-1,-1] = 2
-
 c = np.zeros(m.shape, dtype=int)
-
 maxentry = np.amax(m)
 
 moves = (np.array([0, 1], dtype=int),
@@ -59,16 +43,12 @@ dirs = {-4: moves[1],
         -5: moves[0],
         -2: moves[2]}
 
-id1 = 1
-id2 = 10
-
 def connected(l1, path2, pid):
     for e in path2:
         if np.sum(np.abs(e - l1)) == pid:
             return e
     return False 
 
-#TODO: don't allow cluster forming
 def valid_move(loc,L):
     return 0 <= loc[0] < L[0] and 0 <= loc[1] < L[1] 
 
@@ -105,12 +85,6 @@ def calc_pathsum(path1,path2,loc):
         s += m[e]
         if np.allclose(e,loc):
             return s
-succ_path = np.zeros(p.shape)
-totalpath = np.zeros(p.shape) 
-inloc1 = np.array([0,0])
-inloc2 = np.array(m.shape)-1
-print m[-1,-1] == m[tuple(inloc2)]
-maxres = 1e9
 
 def rebuild_p(p, c, path, pid):
     for loc in path[:-1]:
@@ -125,15 +99,19 @@ def rebuild_p(p, c, path, pid):
         c[tuple(loc)] = count
         count += 1
     
+pathlist = {}
 
 class paths:
     #loc = np.zeros((2))
     #path = [loc]
-    counter = 1 
-    def __init__(self,  loc, pid=10):
+    counter = 1
+    special = False 
+    active = 1
+    def __init__(self,loc, pid=10):
         self.pid = pid 
         self.loc = loc
         self.path = [loc]
+        self.special = (pid == 10) or (pid == 20)
         p[tuple(self.loc)] = self.pid
 
     def update(self,p,c):
@@ -145,7 +123,7 @@ class paths:
         #print self.loc, ploc
         if ploc == self.pid:
             return 'going back!'
-        if ploc == 0:
+        elif ploc == 0:
             
             # mark neighbouring sites with a code to find the path
             for e in self.env:
@@ -169,63 +147,122 @@ class paths:
             rebuild_p(p,c, self.path, self.pid)
             return True
         else:
-            #implement merging routine here
-            self.path.append(self.loc)
-            if c[tuple(self.loc)] < 0:
-                self.connloc = self.loc + dirs[c[tuple(self.loc)]]
+            if ploc in [10,11,20,21]:
+                if self.special:
+                    # we are done
+                    if c[tuple(self.loc)] < 0:
+                        self.connloc = self.loc + dirs[c[tuple(self.loc)]]
+                    else:
+                        self.connloc = self.loc
+                    return False
+                else: 
+                    if c[tuple(self.loc)] < 0:
+                        self.connloc = self.loc + dirs[c[tuple(self.loc)]]
+                    else:
+                        self.connloc = self.loc
+                    pathlist[p[tuple(self.connloc)]].connloc = self.loc
+                    merge(p,c,pathlist, pathlist[p[tuple(self.connloc)]], self)
+                    return True
             else:
-                self.connloc = self.loc
-            
-            return False
+                #implement merging routine here
+                self.path.append(self.loc)
+                if c[tuple(self.loc)] < 0:
+                    self.connloc = self.loc + dirs[c[tuple(self.loc)]]
+                else:
+                    self.connloc = self.loc
+                print 'merging ', self.connloc,self.pid, ploc
+                #print p[self.connloc[0]-5:self.connloc[0]+5, self.connloc[1]-5:self.connloc[1]+5]
+                merge(p,c,pathlist, self, pathlist[p[tuple(self.connloc)]])
+                #print p[self.connloc[0]-5:self.connloc[0]+5, self.connloc[1]-5:self.connloc[1]+5]
+            return True
+
+special_pids = [10,20]
+
         
-def merge():
-    #TODO
-    pass
+def merge(p,c,pathlist, path1, path2):
+    mergepoint = path1.connloc
+    path2.path = path2.path[:c[tuple(mergepoint)]+1]
+            
+    c[p == path2.pid] = 0
+    c[p == path2.pid + 1] = 0
+    p[p == path2.pid] = 0
+    p[p == path2.pid + 1] = 0
 
-class path(paths):
-    pass
+    path1.path = path1.path + path2.path[::-1]
+    rebuild_p(p,c,path1.path, path1.pid)
+    path2.active = 0
 
-a = paths(np.array([0,0]), pid=10)
-b = paths(np.array(m.shape)-1, pid=20)
+
 #a.allpaths = [path() for i in range(10)]
 
 #record 754109
 
-f = plt.figure()
-graph1 = f.add_subplot(111)
+#fig = plt.figure()
+#graph1 = fig.add_subplot(111)
 #graph2 = f.add_subplot(212)
-g1 = graph1.matshow(p)
+#g1 = graph1.matshow(p)
 #g2 = graph2.matshow(c)
-    
-mres = 1e10
-result = 1e11
-numpaths = m.shape[0]
+done = 0    
+mres = 2 * maxentry * m.shape[0] 
+result = mres
+numpaths = 40 
 #TODO: spawn more paths here
-for i in range(500):
+for i in range(1):
 
     p[:,:] = 0
     c[:,:] = 0
     a = paths(np.array([0,0]), pid=10)
     b = paths(np.array(m.shape)-1, pid=20)
-    pathlist = [a,b]
+    pathlist = {}
+    pathlist[a.pid] = a
+    pathlist[b.pid] = b
     j = 3
     while j < numpaths + 3:
         xloc = random_integers(low=0, high=m.shape[0]-1,size=2)
         if random_integers(low=1,high=maxentry,size=1) < maxentry - m[tuple(xloc)]:
-            pathlist.append(paths(np.array(xloc), pid=10*j))
+            pathlist[10*j] = paths(np.array(xloc), pid=10*j)
+        
             j = j + 1
 
     #### 
-    raw_input()
+    #raw_input()
     unconnected = True
     while unconnected == True:
-        unconnected  = a.update(p,c)
-        if unconnected == False:
-            result = calc_pathsum(b.path, a.path, a.connloc)
+        if len(pathlist.values()) < 20:
+            added = 0
+            while not added:
+                xloc = random_integers(low=0, high=m.shape[0]-1,size=2)
+                if p[tuple(xloc)] ==0:
+                    if random_integers(low=1,high=maxentry,size=1) < maxentry - m[tuple(xloc)]:
+                        pathlist[10*j] = paths(np.array(xloc), pid=10*j)
+                        added=1 
+                        j = j + 1
+        for pa in pathlist.values():
+            g1.set_data(p)
+            #print p
+            #plt.draw()
+            #plt.show()
+            #plt.matshow(p)
+            #raw_input()
+            if pa.active:
+                unconnected  = pa.update(p,c)
+            else:
+                pathlist.pop(pa.pid,None)
+            if unconnected == False:
+                if pa.pid == 10:
+                    result = calc_pathsum(pathlist[b.pid].path, pathlist[a.pid].path, pathlist[a.pid].connloc)
+                elif pa.pid == 20:
+                    result = calc_pathsum(pathlist[a.pid].path, pathlist[b.pid].path, pathlist[b.pid].connloc)
+       
+                mres = min(mres, result)
+                print result, mres
+                break
+    #g2.set_data(c)
+    #plt.draw()
     
+    #raw_input()
 
-            mres = min(mres, result)
-            break
+"""
         if unconnected == True:
             unconnected = b.update(p,c)
             if unconnected == False:
@@ -233,15 +270,6 @@ for i in range(500):
         
                 mres  = min(mres, result)
                 break
-    print result, mres
-    #g2.set_data(c)
-    #plt.draw()
-    
-    #raw_input()
-g1.set_data(winp)
-plt.draw()
-
-"""
 for trial in range(1):
     done = 0
     while not done:
