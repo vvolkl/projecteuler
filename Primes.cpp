@@ -22,10 +22,13 @@ vector<int> sieve(int prime){
         }
     return primes;
 }
+
 int main()
 
     vector<int> a = sieve(100);
-    cout<<a[0]<<endl;
+    for (int i=0; i< 20; i++) {
+    cout<<a[i]<<endl;
+    }
     return  0;
 }
 

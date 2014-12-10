@@ -1,7 +1,37 @@
+#include <Python.h>
+
 #include <iostream>
 #include <vector>
 #include <math.h>
 #include <gmp.h>
+
+
+PyMODINIT_FUNC
+initdemo(void)
+{
+    PyObject *m;
+
+    m = Py_InitModule("spam", SpamMethods);
+    if (m == NULL)
+        return;
+
+    SpamError = PyErr_NewException("spam.error", NULL, NULL);
+    Py_INCREF(SpamError);
+    PyModule_AddObject(m, "error", SpamError);
+}
+
+
+
+static PyObject *
+demo_system(PyObject *self, PyObject *args)
+{
+    const char *command;
+    int sts;
+
+    sts =5; 
+    return Py_BuildValue("i", sts);
+}
+
 
 using namespace std;
 
@@ -61,6 +91,19 @@ vector<int> sieve(int prime) {
 }
 
 
+
+
+int checkTwoPrimes(mpz_t a, mpz_t b) {
+    int result = 1;
+    mpz_t temp;
+    mpz_init_set_ui(temp,0);
+    concatenate(temp, a, b);
+    result  = result  * mpz_probab_prime_p(temp,25);
+    concatenate(temp,b,a);
+    result  = result  * mpz_probab_prime_p(temp,25);
+    return result;
+}
+
 // choose set of primes
 
 
@@ -72,9 +115,9 @@ int main() {
     */
 
     mpz_t a;
-    mpz_init_set_ui(a,1111);
+    mpz_init_set_ui(a,7);
     mpz_t b;
-    mpz_init_set_ui(b,2);
+    mpz_init_set_ui(b,109);
     mpz_t temp;
     mpz_init_set_ui(temp,0);
 
@@ -82,6 +125,10 @@ int main() {
     cout<<endl<<count_digits(a)<<endl;
     concatenate(temp,a,b);
     mpz_out_str(stdout, 10,temp);
+
+    cout<<endl<<endl;
+    cout<<checkTwoPrimes(a,b)<<endl;
+
     return  0;
 }
 

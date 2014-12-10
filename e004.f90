@@ -10,9 +10,9 @@ end do
 isP = i
 end function isPalindrome
 
-program e003
+program e004
 implicit none
 integer :: res, isPalindrome
 res  = isPalindrome(9009)
 write(*,*) res 
-end program e003
+end program e004
