@@ -19,7 +19,7 @@ result = 0
 ######## 
    
 import matplotlib.pyplot as plt
-
+from matplotlib.colors import LogNorm
 plt.ion()
 from numpy.random import random_integers
 import itertools
@@ -38,6 +38,14 @@ moves = (np.array([0, 1], dtype=int),
         np.array([1, 0], dtype=int),
         np.array([-1,0], dtype=int),
         np.array([0,-1], dtype=int))
+amoves = (np.array([0, 1], dtype=int),
+          np.array([1, 0], dtype=int))
+bmoves = (np.array([0, -1], dtype=int),
+          np.array([-1, 0], dtype=int))
+
+bweights=(1,1,0,0)
+aweights=(0,0,1,1)
+
 dirs = {-4: moves[1],
         -1: moves[3],
         -5: moves[0],
@@ -56,11 +64,29 @@ def add_segment(pid,loc,p):
     if loc == None:
         return None,None
     opt = [] 
- 
-    for move in moves:   
-        if valid_move(loc + move, p.shape):
-            if not (p[tuple(loc + move)]) == pid: # or p[tuple(loc + move)] == pid + 1):
-                opt.append(loc + move)
+    weights = (1,1,0.2,0.2)
+    aweights = [1,1]
+    bweights = [1,1]
+    if pid == 10:
+        weights = []
+        for move, we in zip(amoves, aweights):   
+            if valid_move(loc + move, p.shape):
+                if not (p[tuple(loc + move)]) == pid: # or p[tuple(loc + move)] == pid + 1):
+                    opt.append(loc + move)
+                    weights.append(we)
+                    
+    elif pid == 20:
+        weights = []
+        for move, we in zip(bmoves, bweights):   
+            if valid_move(loc + move, p.shape):
+                if not (p[tuple(loc + move)]) == pid: # or p[tuple(loc + move)] == pid + 1):
+                    opt.append(loc + move)
+                    weights.append(we)
+    else:
+        for move in moves:   
+            if valid_move(loc + move, p.shape):
+                if not (p[tuple(loc + move)]) == pid: # or p[tuple(loc + move)] == pid + 1):
+                    opt.append(loc + move)
     #print opt
     if opt == []:
         return None,[None]
@@ -69,7 +95,7 @@ def add_segment(pid,loc,p):
     tprob = np.sum([m[tuple(e)] for e in opt])
     #print opt,len(opt), tprob
     #print [m[tuple(e)] for e in opt]
-    probs = np.array([(tprob-m[tuple(e)]) for e in opt])    
+    probs = np.array([(tprob-int(e[1]*m[tuple(e[0])])) for e in zip(opt, weights)])    
     #probs = probs #/ np.sum(probs)
     #TODO: rewrite weighted_values to accept integers
     return np.array(weighted_values(np.array(opt), probs,np.sum(probs), 1)[0]), opt
@@ -87,6 +113,10 @@ def calc_pathsum(path1,path2,loc):
             return s
 
 def rebuild_p(p, c, path, pid):
+    c[p == pid] = 0
+    c[p == pid + 1] = 0
+    p[p == pid] = 0
+    p[p == pid + 1] = 0
     for loc in path[:-1]:
         for m in moves:
             if valid_move(loc + m, p.shape):
@@ -122,6 +152,7 @@ class paths:
         ploc = p[tuple(self.loc)]
         #print self.loc, ploc
         if ploc == self.pid:
+            print 'going back'
             return 'going back!'
         elif ploc == 0:
             
@@ -137,13 +168,10 @@ class paths:
             return True
         elif ploc == self.pid + 1:
             self.connloc = self.loc + dirs[c[tuple(self.loc)]]
+            #print np.allclose(self.connloc,self.loc)
             self.path = self.path[:c[tuple(self.connloc)]+1]
             self.counter = len(self.path)
             self.loc = self.path[-1]
-            c[p == self.pid] = 0
-            c[p == self.pid + 1] = 0
-            p[p == self.pid] = 0
-            p[p == self.pid + 1] = 0
             rebuild_p(p,c, self.path, self.pid)
             return True
         else:
@@ -156,12 +184,21 @@ class paths:
                         self.connloc = self.loc
                     return False
                 else: 
+                    """
                     if c[tuple(self.loc)] < 0:
                         self.connloc = self.loc + dirs[c[tuple(self.loc)]]
                     else:
                         self.connloc = self.loc
                     pathlist[p[tuple(self.connloc)]].connloc = self.loc
+                    pathlist[p[tuple(self.connloc)]].loc = self.loc
                     merge(p,c,pathlist, pathlist[p[tuple(self.connloc)]], self)
+                    """
+                    
+                    c[p == self.pid] = 0
+                    c[p == self.pid + 1] = 0
+                    p[p == self.pid] = 0
+                    p[p == self.pid + 1] = 0
+                    self.active = 0
                     return True
             else:
                 #implement merging routine here
@@ -170,7 +207,7 @@ class paths:
                     self.connloc = self.loc + dirs[c[tuple(self.loc)]]
                 else:
                     self.connloc = self.loc
-                print 'merging ', self.connloc,self.pid, ploc
+                #print 'merging ', self.connloc,self.pid, ploc
                 #print p[self.connloc[0]-5:self.connloc[0]+5, self.connloc[1]-5:self.connloc[1]+5]
                 merge(p,c,pathlist, self, pathlist[p[tuple(self.connloc)]])
                 #print p[self.connloc[0]-5:self.connloc[0]+5, self.connloc[1]-5:self.connloc[1]+5]
@@ -189,6 +226,7 @@ def merge(p,c,pathlist, path1, path2):
     p[p == path2.pid + 1] = 0
 
     path1.path = path1.path + path2.path[::-1]
+    path1.loc = path1.path[-1]
     rebuild_p(p,c,path1.path, path1.pid)
     path2.active = 0
 
@@ -197,18 +235,19 @@ def merge(p,c,pathlist, path1, path2):
 
 #record 754109
 
-#fig = plt.figure()
-#graph1 = fig.add_subplot(111)
+fig = plt.figure()
+graph1 = fig.add_subplot(111)
 #graph2 = f.add_subplot(212)
-#g1 = graph1.matshow(p)
+g1 = graph1.matshow(p, norm=LogNorm(vmin=1, vmax=100))
 #g2 = graph2.matshow(c)
 done = 0    
 mres = 2 * maxentry * m.shape[0] 
 result = mres
 numpaths = 40 
 #TODO: spawn more paths here
-for i in range(1):
+for i in range(100):
 
+    step = 0
     p[:,:] = 0
     c[:,:] = 0
     a = paths(np.array([0,0]), pid=10)
@@ -227,7 +266,7 @@ for i in range(1):
     #### 
     #raw_input()
     unconnected = True
-    while unconnected == True:
+    while unconnected == True and step < 1e5:
         if len(pathlist.values()) < 20:
             added = 0
             while not added:
@@ -238,9 +277,6 @@ for i in range(1):
                         added=1 
                         j = j + 1
         for pa in pathlist.values():
-            g1.set_data(p)
-            #print p
-            #plt.draw()
             #plt.show()
             #plt.matshow(p)
             #raw_input()
@@ -257,8 +293,12 @@ for i in range(1):
                 mres = min(mres, result)
                 print result, mres
                 break
-    #g2.set_data(c)
-    #plt.draw()
+        rebuild_p(p,c,pathlist[10].path,10)
+        rebuild_p(p,c,pathlist[20].path,20)
+        if 0: #not step % 1e3 and 1:
+            g1.set_data(p)
+            plt.draw()
+            raw_input()
     
     #raw_input()
 
