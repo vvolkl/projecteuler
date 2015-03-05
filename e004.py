@@ -1,4 +1,5 @@
 import math as gmpy2
+
 def fermat_factor(n):
     assert n % 2 != 0  # Odd integers only
 
@@ -15,14 +16,13 @@ def fermat_factor(n):
 def is_square(n):
     root = gmpy2.sqrt(n)
     return root % 1 == 0  # '4.0' will pass, '4.1212' won't
-a = 1001
-c=999
-while(a>1000):
-	c=c-1	
-	d = 1000 * c + int(str(c)[::-1])
-	
 
-	a,b =fermat_factor(d)
-	print d,a,b 
+firstFactor = 1001
+palindromeHalf = 999
+while( firstFactor > 1000):
+	palindromeHalf = palindromeHalf - 1	
+	fullPalindrome = 1000 * palindromeHalf + int(str(palindromeHalf)[::-1])
+	firstFactor, secondFactor = fermat_factor(fullPalindrome)
+	print fullPalindrome, firstFactor, secondFactor 
 
 
