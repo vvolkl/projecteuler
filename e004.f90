@@ -1,3 +1,4 @@
+! projecteuler problem 004 
 
 function isPalindrome(pal) result(isP)
 integer, intent(in):: pal 
@@ -16,15 +17,15 @@ end function isPalindrome
 program e004
 implicit none
 integer:: res, isPalindrome, i1, i2, finalresult
+! loop through all factors and check if they make a palindrome
 loop1: do i1 = 999,2,-1
-    do i2 =i1,1,-1
-    res  = isPalindrome(i1*i2)
-    if (res .EQ. 1) then 
-    write(*,*) i1*i2, res
-    finalresult = max(i1*i2, finalresult)
-!        exit loop1
-    end if
+    do i2 = i1,1,-1
+        res  = isPalindrome(i1*i2)
+        if (res .EQ. 1) then 
+            write(*,*) i1*i2, res
+            finalresult = max(i1*i2, finalresult)
+        end if
     end do
 end do loop1
-write(*,*) finalresult
+write(*,*) 'largest palindrome of two 3-digit numbers: ', finalresult
 end program e004
