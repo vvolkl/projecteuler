@@ -6,7 +6,7 @@ import argparse
 import numpy as np
 import re
 import time
-import primehelpers
+import primehelpers_cpp as primehelpers
 
 import itertools
 from Primes import *
@@ -54,13 +54,17 @@ for i in range(1,n):
                 if np.any(x):
                     print 'found it!'
                     result = [i,j,k,l] + x
-                    break
-            if result:
-                break
-        if result:
-            break
-    if result:
-        break
+                    print result
+                    print 'indices of result:'
+                    print result 
+                    print 'result:'
+                    print [p[r] for r in result]
+                    print  'sum:'
+                     
+                    print sum([p[r] for r in result])
+                    print 'elapsed time:'
+                    print time.time()-start
+                    raise SuccessException
 
 """
             for l in w:
@@ -84,13 +88,4 @@ for e in itertools.combinations(range(100),4):
 """
 
 
-print 'indices of result:'
-print result 
-print 'result:'
-print [p[r] for r in result]
-print  'sum:'
- 
-print sum([p[r] for r in result])
-print 'elapsed time:'
-print time.time()-start
 

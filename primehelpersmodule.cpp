@@ -1,10 +1,10 @@
 #include <iostream>
+#include <string>
 #include <vector>
 #include <math.h>
 #include <gmp.h> 
 using namespace std;
  
-
 
 
 int count_digits(mpz_t num) {
@@ -29,36 +29,34 @@ void concatenate(mpz_t temp, mpz_t a, mpz_t b) {
 
 vector<int> sieve(int prime) {
     //Naive implementation of Erastosthenes' sieve.
-    size_t max_range = (size_t) floor(sqrt(prime));
+    //size_t max_range = (size_t) floor(sqrt(prime));
     vector<int> candidates(prime);
-    vector<int> primes(max_range);
-    
-    for(int i=0; i < prime; i++){
+    vector<int> primes;
+    for(int i=0; i < prime; i++) {
         candidates[i] = i;
     }
     int p = 2;
-    primes[0] = p;
+    primes.push_back(p);
     int k = 1;
     bool done = 0;
-    while(p < max_range) { 
+    while(p < prime) { 
         //cout<<" "<<candidates[11]<<endl;    
-        for(int i = p; i < prime; i++) {
-            if (i%p == 0) {
-                cout<<"\t"<<i<<"\t"<<p<<endl;
+        for(int i = p; i < prime; i = i + p) {
+                //cout<<"setting candidate to zero:  \t"<<i<<"\t"<<p<<endl;
                 candidates[i] = 0;
-                }
             }
         while(!done && p < prime) {
-            p = p + 1;
             //cout<<p<<"\t"<<candidates[p]<<endl;
+            p = p + 1;
             if (candidates[p] != 0) {
-                primes[k] = p;
+                primes.push_back(p);
                 k = k + 1;
                 done = 1; 
             }
         }
         done = 0;
     }
+    primes.pop_back();
     return primes;
 }
 
@@ -86,10 +84,34 @@ void say_hello(const char* name) {
  
 #include <boost/python/module.hpp>
 #include <boost/python/def.hpp>
+#include <boost/python/class.hpp>
+#include <boost/python/copy_const_reference.hpp>
+#include <boost/python/return_by_value.hpp>
+#include <boost/python/return_value_policy.hpp>
+#include <boost/python/to_python_converter.hpp>
+#include <boost/python/list.hpp>
+
+
 using namespace boost::python;
  
-BOOST_PYTHON_MODULE(primehelpers)
+
+template<class T>
+struct VecToList
 {
+    static PyObject* convert(const vector<T>& vec)
+    {
+        list* l = new list();
+        for(size_t i = 0; i < vec.size(); i++)
+            (*l).append(vec[i]);
+        return l->ptr();
+    }
+};
+
+BOOST_PYTHON_MODULE(primehelpers_cpp)
+{
+    //to_python_converter<vector<int,allocator<int> >, VecToList<int> >();
+    to_python_converter<std::vector<int, std::allocator<int> >, VecToList<int> >();
     def("checkTwoPrimes", checkTwoPrimes);
+    def("sieve", sieve );//, return_value_policy<return_by_value>());
 }
 

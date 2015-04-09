@@ -4,7 +4,7 @@ implicit none
 integer*8 :: i, check
 logical :: done
 i = 23 
-
+done = .FALSE.
 write(*,*) 'smallest number that is evenly divisible by all numbers 1-20'
 do while (.NOT. done) 
     i = i + 1

@@ -38,9 +38,10 @@ for a in np.arange(1,n):
         #print a,b,c, summe
         cc = np.ceil(c)
         
-        if cc ==c:
+        if cc == c:
             if np.sum([a,b,cc]) == 1000: 
                 print a,b,cc,np.sum([a,b,cc])
+		print 'result: ', np.prod([a,b,cc])
                 raise MyException()
     #if summe==1000:
     #    break

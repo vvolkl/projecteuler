@@ -7,11 +7,11 @@ import argparse
 import numpy as np
 import re
 parser = argparse.ArgumentParser(description=doc)
-parser.add_argument('n', metavar='n', type=int, nargs='?', default=1000, 
+parser.add_argument('n', metavar='n', type=int, nargs='?', default=13, 
                    help='the main variable for our program')
 args = parser.parse_args()
 
-#print args.n
+n =  args.n
 
 
 def charprod(s):
@@ -41,15 +41,16 @@ num="""73167176531330624919225119674426574742355349194934
 05886116467109405077541002256983155200055935729725
 71636269561882670428252483600823257530420752963450"""
 num = num.replace('\n','')
-num = [e for e in num.split('0') if len(e)>4] 
+num = [e for e in num.split('0') if len(e)>n-1] 
 
 maxprod = 0
 winner = ''
 for e in num:
-	for i in range(len(e)-5):
-		temp =  e[i:i+5]
-		if charprod(temp) > maxprod:
-			maxprod = charprod(temp)
+	for i in range(len(e)-n+1):
+		temp =  e[i:i+n]
+		_prod = charprod(temp)
+		if _prod > maxprod:
+			maxprod = _prod
 			winner = temp
 
 print maxprod, winner

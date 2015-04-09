@@ -3,9 +3,9 @@
 from distutils.core import setup
 from distutils.extension import Extension
  
-setup(name="PackageName",
+setup(name="primehelpers_cpp",
     ext_modules=[
-        Extension("primehelpers", ["primehelpersmodule.cpp"],
+        Extension("primehelpers_cpp", ["primehelpersmodule.cpp"],
         libraries = ["boost_python"], extra_link_args=["-lgmp"])
     ])
 
