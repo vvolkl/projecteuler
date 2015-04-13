@@ -1,27 +1,11 @@
 from __future__ import division
-
-
-doc="""Largest prime factor
-Problem 3
-
-The prime factors of 13195 are 5, 7, 13 and 29.
-
-What is the largest prime factor of the number 600851475143 ?
-
-Valentin Volkl 28.6.2013"""
-
 import sys
 
+def findLargestFactor():
+    f = int(n / 2)
+    while (n % f):
+        f = f - 1
+    return f
 
-
-try:
-	n = int(sys.argv[1])
-except:
-	n = 600851475143
-
-d = int(n / 2)
-
-while (n % d):
-	d = d - 1
-print 'solution:', d
-	
+def solve(n=600851475143):
+    return findLargestFactor(n)
