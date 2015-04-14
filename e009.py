@@ -19,6 +19,6 @@ def solve(n=1000):
             cc = np.ceil(c)
             if cc == c:
                 if np.sum([a,b,cc]) == 1000: 
-                    print a,b,cc,np.sum([a,b,cc])
+                    #print a, b, cc, np.sum([a, b, cc])
                     result = np.prod([a,b,cc])
                     return result
