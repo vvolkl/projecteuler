@@ -1,6 +1,7 @@
 import numpy as np
 
-def sumEvenFibonacci(up_to=4e6)
+
+def sumEvenFibonacci(up_to=4e6):
     even_terms_sum = 0
     a = 1
     b = 1
@@ -13,7 +14,6 @@ def sumEvenFibonacci(up_to=4e6)
             even_terms_sum = even_terms_sum + b
     return even_terms_sum
 
+
 def solve(n=4e6):
     return sumEvenFibonacci(n)
-
-
