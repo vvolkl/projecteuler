@@ -1,6 +1,5 @@
-program e003
+function euler003() result(factor) 
 implicit none
-
 double precision:: input, factor
 input  = 600851475143.0D+0
 factor = 2.0D+0
@@ -12,4 +11,13 @@ do while (input > 1)
     end if 
         factor = factor + 1
 end do
-end program
+end function euler003
+
+program e003
+implicit none
+external :: euler003
+integer:: res
+res = euler003()
+end program e003
+
+
