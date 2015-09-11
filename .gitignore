@@ -34,7 +34,7 @@ nosetests.xml
 .project
 .pydevproject
 
-
+*.o
 *.out
 *.swp
 *.dat
