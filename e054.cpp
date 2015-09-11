@@ -7,27 +7,19 @@
 #include <algorithm>
 using namespace std;
 
-
-
-
-
 class poker_hand {
     public:
         vector <int> cards;
         vector <int> rank;
         long unsigned int value;
-        //vector<string> sort(int * cards[2][5]);
-        //int assign_value(vector<string>);
         int is_sequence();
         bool same_suit();
-        int count_pairs();       
+        int count_pairs();
         void eval_pairs();
         int count_kind();
         int eval_kind();
         void calculate();
-        //int value = assign_value(cards)
         void add_card(int card);
-        //void print_cards();
         void sort_hand();
         void clear_hand();
 };
@@ -36,8 +28,6 @@ void poker_hand::clear_hand() {
     cards.clear();
     rank.clear();
     value = 0;
-    
-    
 }
 
 void poker_hand::add_card(int card) {
@@ -47,7 +37,7 @@ void poker_hand::add_card(int card) {
 void poker_hand::sort_hand() {
     sort(cards.begin(), cards.end());
 }
-    
+
 int poker_hand::is_sequence() {
     //int diff = 0;
     for(int i = 0; i<cards.size()-1;i++){
@@ -77,7 +67,6 @@ int poker_hand::count_pairs() {
                 cout<<"\t\t "<<v<<"\t"<<cards[i+1] / 100<<endl;
                 num_pairs++;
                 i++;
-              
         }
     }
     return num_pairs;
@@ -87,11 +76,11 @@ void poker_hand::eval_pairs() {
     for (int i = 0; i < cards.size()-1; i++) {
         v = cards[i] / 100;
             if(v == (cards[i+1] /100)){
-                rank.push_back(v); 
+                rank.push_back(v);
                 i++;
-            }  
+            }
         }
-    
+
     sort(rank.begin(),rank.end());
 }
 
@@ -106,7 +95,7 @@ int poker_hand::count_kind() {
         else {
         if (kind > maxkind) {
             maxkind = kind;
-            } 
+            }
             kind = 1;
         }
     }
@@ -122,20 +111,19 @@ int poker_hand::eval_kind() {
         if (cards[i] / 100 == cards[i+1] / 100) {
             kind++;
             r = cards[i] / 100;
-            
         }
         else {
         if (kind > maxkind) {
             maxr = r;
             maxkind = kind;
-            } 
-        kind = 1;    
+            }
+        kind = 1;
     }
     }
     return maxr;
 }
 
-void poker_hand::calculate() { 
+void poker_hand::calculate() {
    long unsigned int offset = 100000000000000;
    //Royal Flush
    if (is_sequence() && same_suit() && cards.back() / 100 == 14) {
@@ -186,7 +174,7 @@ void poker_hand::calculate() {
     else if (count_kind() == 3 ) {
         cout<<"Three of "<<eval_kind()<<endl;
         value = offset * 7;
-        value += eval_kind() * offset / 100; 
+        value += eval_kind() * offset / 100;
         long unsigned int off = offset / 100;
         for (int i = cards.size()-1; i>-1; i--) {
             off = off / 100;
@@ -199,9 +187,7 @@ void poker_hand::calculate() {
         value = offset * 6;
         eval_pairs();
         value += offset / 100 * rank[1] + offset / 100 / 100 * rank[0];
-        
-        
-        for (int i = cards.size()-1; i>-1; i--) { 
+        for (int i = cards.size()-1; i>-1; i--) {
             value +=  (cards[i] / 100);
         }
     }
@@ -218,7 +204,7 @@ void poker_hand::calculate() {
     }
     else {
         cout<<"Highest card"<<endl;
-        value = 0; 
+        value = 0;
         long unsigned int off = offset / 100;
         for (int i = cards.size()-1; i>-1; i--) {
             off = off / 100;
@@ -226,12 +212,9 @@ void poker_hand::calculate() {
             value += off * (cards[i] /100);
         }
     }
-
-    
 }
 
 int do_it() {
-
     int Player_1_wins=0;
     int _c;
     char _s;
@@ -270,17 +253,12 @@ int do_it() {
                 case 'H': _c += 3; break;
                 }
 
-            //cout<<"c\t"<<_c<<endl;
             if(i < 15){
                 p1.add_card(_c);
             }
             else{
                 p2.add_card(_c);
             }
-            //string v(line[i]);
-            //string s(line[i+1]);
-            //p1.add_card(v, s);
-            //cout<<line[i]<<endl;
         }
         p1.sort_hand(); p2.sort_hand();
         cout<<"highest card:   "<<p1.cards.back()<<endl;
@@ -291,9 +269,6 @@ int do_it() {
         cout<<"win: \t"<<p1.value<<"\t"<<p2.value<<"\t"<<(p1.value > p2.value)<<endl; 
         Player_1_wins += p1.value > p2.value ;
         p1.clear_hand(); p2.clear_hand();
-        //poker_hand p1(line);
-        //p1.print_cards();
-        //cout<<line<<endl;
         }
     }
     cout<<"result: \t"<<Player_1_wins<<endl;
@@ -301,7 +276,6 @@ int do_it() {
 }
 
 int test() {
-
     int Player_1_wins;
     int _c;
     char _s;
@@ -317,7 +291,6 @@ int test() {
         for(int i=0; i < 29; i = i + 3){
             _c = 0;
             _s = (char) line[i];
-            //cout<<_s<<endl;
             switch(_s){
                 case '2': _c = 200; break;
                 case '3': _c = 300; break;
@@ -339,18 +312,12 @@ int test() {
                 case 'S': _c += 2; break;
                 case 'H': _c += 3; break;
                 }
-
-            //cout<<"c\t"<<_c<<endl;
             if(i < 15){
                 p1.add_card(_c);
             }
             else{
                 p2.add_card(_c);
             }
-            //string v(line[i]);
-            //string s(line[i+1]);
-            //p1.add_card(v, s);
-            //cout<<line[i]<<endl;
         }
         p1.sort_hand(); p2.sort_hand();
         cout<<"*highest card:   "<<p1.cards.back()<<endl;
@@ -362,15 +329,10 @@ int test() {
         cout<<"*win: \t"<<p1.value<<"\t"<<p2.value<<"\t"<<(p1.value > p2.value)<<endl; 
         Player_1_wins += p1.value > p2.value ;
         p1.clear_hand(); p2.clear_hand();
-        //poker_hand p1(line);
-        //p1.print_cards();
-        //cout<<line<<endl;
         }
     }
     cout<<"result: \t"<<Player_1_wins<<endl;
     return 0;
-
-
 }
 
 
