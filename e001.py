@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def sumMultiples(n):
+def sum_multiples(n):
     d = np.arange(0, n, 1)
     return np.sum(d[(d % 3 == 0) + (d % 5 == 0)])
 
