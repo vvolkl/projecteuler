@@ -7,4 +7,4 @@ def sum_multiples(n):
 
 
 def solve(n=1000):
-    return sumMultiples(n)
+    return sum_multiples(n)
