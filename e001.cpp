@@ -1,28 +1,30 @@
-/* projecteuler.net
-/ Valentin Volkl
-/ TODO: implement improvement from projecteulerpdf
-/ add all numbers divisible by 3 and 5 and subtract
-/ numbers divisible by 15
-*/
+#include<iostream>
+#include<string>
+//#include"e001.h" 
 
-#include <iostream>
-#include <string>
 
-int main(int argc, char *argv[]) {
-  long int N, result;
-  if ( argc > 1) {
-    N = std::atoi(argv[1]);
-  } else {
-    N = 1000;
-  }
-  std::cout<<"summing multiples of 3 and 5 up to "<<N<<"..."<<std::endl;
-  for(long int i=0; i < N; ++i) {
-    if ( !(i % 3) || (i % 5)) {
+template <typename t1>
+t1 sum_multiples_of(t1 A, t1 B, t1 upTo) {
+  t1 result = 0;
+  for(t1 i=0; i < upTo; ++i) {
+    if ( !(i % A) || !(i % B)) {
       result += i;
     }
   }
-  std::cout<<"result: "<<std::endl;
+  return result;
+}
+
+
+int solve() {
+   int A = 3;
+   int B = 5;
+   int upTo = 1000;
+   int result =  sum_multiples_of<int>(A, B, upTo);
+  return result;
+
+}
+int main(int argc, char *argv[]) {
+  int result = solve();
   std::cout<<result<<std::endl;
-  return 0;
 }
 
