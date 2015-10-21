@@ -1,30 +1,37 @@
-from __future__ import division
+import numpy as np
+from Primes import sieve
 
-def sieve(n):
-    m = (n-1) // 2
-    b = [True]*m
-    i,p,ps = 0,3,[2]
-    while p*p < n:
-        if b[i]:
-            ps.append(p)
-            j = 2*i*i + 6*i + 3
-            while j < m:
-                b[j] = False
-                j = j + 2*i + 3
-        i+=1; p+=2
-    while i < m:
-        if b[i]:
-            ps.append(p)
-        i+=1; p+=2
-    return ps
+def brute_force(N=20):
+    i = N
+    done = False
+    while not done:
+        i = i + N
+        done = True
+        div = N - 1
+        is_candidate = True
+        while is_candidate and div > 1:
+            is_candidate *= not ( i % div )
+            div = div + 1
+        done = is_candidate
+    return i                
 
-i = 2521
-done = False
-while not done:
-    i = i + 1
-    done = True
-    for div in range(2,21):
-        done *= not ( i % div )
+def smart(N, verbose=False):
+    """
+    Form product of primes up to N. Each prime factor has 
+    a multiplicity that is given by its highest power that is still smaller than N.
+    """
+    result = 1
+    logN = np.log(N)
+    primes = sieve(N)
+    for prime in primes:
+         # every prime shows up ``exponent`` times in the final product
+         exponent = np.floor(1. / np.log(prime) * logN)  
+         if verbose:
+             print prime, exponent
+         result *= prime ** exponent
+    return result
 
-print i
+def solve(N=20):
+    return smart(N)
+
 
