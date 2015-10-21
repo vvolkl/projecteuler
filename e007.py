@@ -1,5 +1,5 @@
-from primehelpers_cpp import sieve
+from Primes import sieve
 
-def solve(n=1000):
-    return  sieve(10000000)[n]
+def solve(n=10000):
+    return sieve(1000000)[n]
 
