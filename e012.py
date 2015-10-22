@@ -1,23 +1,10 @@
 from __future__ import division
-doc = """
-
-Valentin Volkl """
-
-import argparse
 import numpy as np
 import re
 import itertools
 import time
-parser = argparse.ArgumentParser(description=doc)
-parser.add_argument('n', metavar='n', type=int, nargs='?', default=500, 
-                    help='the main variable for our program')
-parser.add_argument('f', metavar='f', type=int, nargs='?', default=False, 
-                    help='switch for brute force solution')
-args = parser.parse_args()
-n=args.n
-
-#d1ef trinum(n):
-#    return np.sum(np.arange(1,n+1))
+from itertools import chain
+from Primes import sieve
 
 def checkfordiv(b):
     total = 0
@@ -45,7 +32,6 @@ def choose(n, k):
     else:
         return 0
 
-from itertools import chain
 
 def factors2(n):
     result = []
@@ -59,24 +45,6 @@ def factors2(n):
         result.extend([i]*s) #avoid another for loop
         if n==1:
             return result
-
-def sieve(n):
-    m = (n-1) // 2
-    b = [True]*m
-    i,p,ps = 0,3,[2]
-    while p*p < n:
-        if b[i]:
-            ps.append(p)
-            j = 2*i*i + 6*i + 3
-            while j < m:
-                b[j] = False
-                j = j + 2*i + 3
-        i+=1; p+=2
-    while i < m:
-        if b[i]:
-            ps.append(p)
-        i+=1; p+=2
-    return ps
 
 def istriangle(n):
     t = 0
@@ -93,9 +61,6 @@ def findnumdiv(c):
     e = np.nonzero(d)
     d = d[e] + 1
     return np.prod(d)
-    
-        
-    
 
 def bruteforce(n):
     a = sieve(20000000)
@@ -111,13 +76,11 @@ def bruteforce(n):
             print total,i,trinum
         else:
             j = j + 1
-            
-
-
     print 'result:'
     print i, trinum
     print 'elapsed time:'
     print time.time()-start
+    return trinum
 
 def dumb():
     #instead, generate all numbers with > 500 divisors and check if they are triangle numbers
@@ -151,9 +114,6 @@ def smarter():
                 if istriangle(b):
                     return b
 
-#print checkfordiv(236215980)
-#print findnumdiv(factors2(28))
-
-a = bruteforce(n)
-print a
+def solve(n=500):
+    return bruteforce(n)
 

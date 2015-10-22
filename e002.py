@@ -10,7 +10,7 @@ def sumEvenFibonacci(up_to=4e6):
         if (a % 2 == 0):
             even_terms_sum = even_terms_sum + a
         b = a + b
-        if (a % 2 == 0):
+        if (b % 2 == 0):
             even_terms_sum = even_terms_sum + b
     return even_terms_sum
 
