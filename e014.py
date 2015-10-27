@@ -3,8 +3,8 @@ import numpy as np
 import re
 import time
 
-n = 1000000
-start = time.time()
+n=1000000
+lengths = np.zeros(n)
 
 def lenCollatz(b):
     global lengths
@@ -28,23 +28,18 @@ def lenCollatz(b):
     lengths[a] = l
     return l, seq 
 
-maxl = 0
-maxj = 0
-l = 0
-j = 0
-lengths = np.zeros(n)
-i = np.arange(n)
-for jlen in i:
- 
-    l, j = lenCollatz(jlen)
-    print jlen,l , maxl
-    if l > maxl:
-        maxl = l
-        maxj = j
-        
-
-
-print 'result:'
-print  np.max(lengths), np.where(lengths == np.max(lengths))[0], maxl, maxj
-print 'elapsed time:'
-print time.time()-start
+def solve(n=1000000):
+    global lengths
+    maxl = 0
+    maxj = 0
+    l = 0
+    j = 0
+    i = np.arange(n)
+    for jlen in i:
+        l, j = lenCollatz(jlen)
+        print jlen,l , maxl
+        if l > maxl:
+            maxl = l
+            maxj = j
+    result = np.where(lengths == np.max(lengths))[0]
+    return result

@@ -17,16 +17,14 @@ def find_factor_candidates(charSet):
 
     Yields
     ------
-    a, b: lists
+    a, b: strings
         candidate factors for a pandigital product
-        in form of list of digits that may need to be
-        joined for multiplication
 
     Examples
     --------
     >>> [ a for a in find_factor_candidates('1234') ]
-    [['12', '3'],
-     ['12', '4'],
+    ['123', 
+     '124',
      ....
 
     """
@@ -35,12 +33,12 @@ def find_factor_candidates(charSet):
         for _a in itertools.combinations(charSet, l):
             for a in itertools.permutations(_a):
                 remainingCharSet = charSet
-            for char in a:
-                remainingCharSet = remainingCharSet.replace(char, '')
-            for l2 in [charSetLength - l + 1]:
-                for _b in itertools.combinations(remainingCharSet, l2):
-                    for b in itertools.permutations(_b):
-                        yield a, b
+                for char in a:
+                    remainingCharSet = remainingCharSet.replace(char, '')
+                for l2 in [charSetLength - l + 1]:
+                    for _b in itertools.combinations(remainingCharSet, l2):
+                        for b in itertools.permutations(_b):
+                            yield map(''.join, [a, b])
 
 
 
