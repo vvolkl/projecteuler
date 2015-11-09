@@ -20,7 +20,8 @@ def solve(n=6, verbose=False):
             digit =  int( str( counter)[::-1][length - interesting[i] ]  ) 
             result *= digit
             if verbose:
-                print "found it: length: ", length," new number: ", counter," result so far: ", result, "digit that was added: ", digit 
+                print "found it: length: ", length," new number: ", 
+                print counter," result so far: ", result, "digit that was added: ", digit 
             i += 1
         counter += 1
     return result
