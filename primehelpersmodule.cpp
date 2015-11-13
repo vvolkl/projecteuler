@@ -71,13 +71,14 @@ int checkTwoPrimes(int aa, int bb) {
 
     int result = 1;
     mpz_t temp;
-    mpz_init_set_ui(temp,0);
+    mpz_init_set_ui(temp, 0);
     concatenate(temp, a, b);
-    result  = result  * mpz_probab_prime_p(temp,25);
-    concatenate(temp,b,a);
-    result  = result  * mpz_probab_prime_p(temp,25);
+    result  = result  * mpz_probab_prime_p(temp, 25);
+    concatenate(temp, b, a);
+    result  = result  * mpz_probab_prime_p(temp, 25);
     return result;
 }
+
 void say_hello(const char* name) {
     cout << "Hello " <<  name << "!\n";
 }
