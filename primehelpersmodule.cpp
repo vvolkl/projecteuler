@@ -3,6 +3,9 @@
 #include <vector>
 #include <math.h>
 #include <gmp.h> 
+
+#include "primehelpersmodule.h"
+
 using namespace std;
  
 
