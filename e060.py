@@ -17,7 +17,7 @@ def solve(n=1100, verbose=True):
             checked[i, j] = primehelpers.checkTwoPrimes(primes[i], primes[j]) > 0
     # c should be symmetric, but one half was not touched before
     c = checked + checked.T
-    for i in range(1, 1100): # for each prime do
+    for i in range(1, n): # for each prime do
         for j in np.nonzero(c[i, :])[0]: # go through its prime partners
             # the next partner must show up in both previous lists
             c1 = np.intersect1d(np.nonzero(c[i, :]), np.nonzero(c[j, :]))
