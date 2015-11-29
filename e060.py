@@ -1,6 +1,6 @@
 
 import numpy as np
-import primehelpers_cpp as primehelpers
+import libprimehelpersmodule as primehelpers
 import Primes
 
 
@@ -28,5 +28,7 @@ def solve(n=1100, verbose=True):
                     for m in c3:
                         c4 = np.intersect1d(c3, np.nonzero(c[m, :]))
                         # found 'em! return the sum of the corresponding primes
+                        if verbose:
+                            print([primes[_o] for _o in [i, j, k, l, m]])
                         return np.sum([primes[_o] for _o in [i, j, k, l, m]])
                 
