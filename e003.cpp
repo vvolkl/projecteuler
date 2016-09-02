@@ -1,11 +1,3 @@
-/*  project euler problem 003
- *  valentin volkl
- *  cpp solution
- *
- *  descr.: finds the largest prime factor of a big integer n
- */
-//TODO: fix. the code below is wrong and roundabout!
-
 #include <iostream>
 #include "math.h"
 using namespace std;

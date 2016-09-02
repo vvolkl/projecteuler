@@ -3,6 +3,7 @@
 # C extensions
 *.so
 *.out
+*out
 # Packages
 *.egg
 *.egg-info
