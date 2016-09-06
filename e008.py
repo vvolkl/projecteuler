@@ -1,26 +1,14 @@
 from __future__ import division
-doc = """
-
-Valentin Volkl """
-
-import argparse
 import numpy as np
-import re
-parser = argparse.ArgumentParser(description=doc)
-parser.add_argument('n', metavar='n', type=int, nargs='?', default=13, 
-                   help='the main variable for our program')
-args = parser.parse_args()
 
-n =  args.n
+def charProduct(numberstring):
+  charprod = 1
+  for numberchar in numberstring:
+      charprod = charprod * int(numberchar)
+  return charprod
 
-
-def charprod(s):
-	a=1
-	for e in s:
-		a=a*int(e)
-	return a
-
-num="""73167176531330624919225119674426574742355349194934
+def solve(n=13):
+    num="""73167176531330624919225119674426574742355349194934
 96983520312774506326239578318016984801869478851843
 85861560789112949495459501737958331952853208805511
 12540698747158523863050715693290963295227443043557
@@ -40,22 +28,20 @@ num="""73167176531330624919225119674426574742355349194934
 84580156166097919133875499200524063689912560717606
 05886116467109405077541002256983155200055935729725
 71636269561882670428252483600823257530420752963450"""
-num = num.replace('\n','')
-num = [e for e in num.split('0') if len(e)>n-1] 
+    num = num.replace('\n','')
+    # build list of possible substrings
+    num = [e for e in num.split('0') if len(e)>n-1] 
+    maxprod = 0
+    winner = ''
+    for e in num:
+      for i in range(len(e)-n+1):
+        temp =  e[i:i+n]
+        _prod = charProduct(temp)
+        if _prod > maxprod:
+          maxprod = _prod
+          winner = temp
+    return maxprod
 
-maxprod = 0
-winner = ''
-for e in num:
-	for i in range(len(e)-n+1):
-		temp =  e[i:i+n]
-		_prod = charprod(temp)
-		if _prod > maxprod:
-			maxprod = _prod
-			winner = temp
-
-print maxprod, winner
-
-#print num[num>10000]
 
 
 
