@@ -4,11 +4,8 @@ project(projecteuler CXX Fortran)
 
 enable_testing()
 
-#execute_process(COMMAND ../e001 OUTPUT_VARIABLE result)
-
-#add_test(Exampletest ../test_cpp.sh)
-
-message(${PROJECT_SOURCE_DIR})
+#set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+#find_package(GMP REQUIRED)
 
 set(CMAKE_CXX_FLAGS "-std=c++14 -O2 -Wall -pedantic")
 file(GLOB files e*.cpp)
@@ -16,7 +13,8 @@ list(SORT files)
 foreach(file ${files}) 
   get_filename_component(f ${file} NAME_WE)
   add_executable(${f}.cppout ${file})
-  add_test(NAME cpp_${f} COMMAND ${PROJECT_SOURCE_DIR}/run.sh ${f}.cpp
+  include_directories($ENV{EIGEN_INCLUDE_DIR})
+  add_test(NAME cpp_${f} COMMAND ${PROJECT_SOURCE_DIR}/run.sh build/${f}.cppout
            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 endforeach()
 
@@ -34,6 +32,6 @@ list(SORT files)
 foreach(file ${files}) 
   get_filename_component(f ${file} NAME_WE)
   add_executable(${f}.f90out ${file})
-  add_test(NAME f90_${f} COMMAND ${PROJECT_SOURCE_DIR}/run.sh ${f}.f90
+  add_test(NAME f90_${f} COMMAND ${PROJECT_SOURCE_DIR}/run.sh build/${f}.f90out
            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 endforeach()

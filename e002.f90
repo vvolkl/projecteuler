@@ -15,7 +15,7 @@ else
     res2 = res
 end if
 ! where are you now
-write(*,*) k, res2
+!write(*,*) k, res2
 ! recursive part: stop when the fibonacci term value exceeds 4 million
 if (k <= lim) then
     ! call fibsum again with the larger two of the three values i,j,k
@@ -24,8 +24,8 @@ if (k <= lim) then
     else
         k = fibsum(i,k,res2,lim)
     end if
-else ! we are done, write result 
-    write(*,*) res2
+!else ! we are done, write result 
+    !write(*,*) res2
 end if
 end function
 

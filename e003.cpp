@@ -4,16 +4,17 @@ using namespace std;
 
 int main() {
   // input to be decomposed in primes 
-  const double n = 600851475143;
+  double n = 600851475143;
   double remainder = 0.1;
   // divisor
-  double i = 2;
+  long int factor = 1;
 
-  while(ceilf(remainder) != remainder) {
-    remainder = n / i;
-    i++;
+  while(n > 1) {
+    ++factor;
+    if (static_cast<long int>(n) % factor == 0) {
+      n = static_cast<long int>(n / static_cast<double>(factor));
+    }
   }
-  cout.precision(11);
-  cout<<remainder<<endl;
+  cout<<factor<<endl;
   return 0;
 }
