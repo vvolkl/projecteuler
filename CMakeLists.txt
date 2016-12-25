@@ -6,6 +6,7 @@ enable_testing()
 
 #set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 #find_package(GMP REQUIRED)
+find_package(Eigen3 REQUIRED)
 
 set(CMAKE_CXX_FLAGS "-std=c++14 -O2 -Wall -pedantic")
 file(GLOB files e*.cpp)
@@ -13,7 +14,13 @@ list(SORT files)
 foreach(file ${files}) 
   get_filename_component(f ${file} NAME_WE)
   add_executable(${f}.cppout ${file})
-  include_directories($ENV{EIGEN_INCLUDE_DIR})
+  ################# Include Eigen in the files that need it #########
+  FILE(READ ${file} TMPTXT)
+  STRING(FIND "${TMPTXT}" "Eigen" matchres)
+  IF(${matchres} EQUAL -1)
+    include_directories(${EIGEN3_INCLUDE_DIR})
+  ENDIF()
+  ###################################################################
   add_test(NAME cpp_${f} COMMAND ${PROJECT_SOURCE_DIR}/run.sh build/${f}.cppout
            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 endforeach()
