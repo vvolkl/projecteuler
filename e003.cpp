@@ -1,12 +1,7 @@
-#include <iostream>
-#include "math.h"
-using namespace std;
 
-int main() {
-  // input to be decomposed in primes 
+int solve() {
+  /// input to be decomposed in primes 
   double n = 600851475143;
-  double remainder = 0.1;
-  // divisor
   long int factor = 1;
 
   while(n > 1) {
@@ -15,6 +10,7 @@ int main() {
       n = static_cast<long int>(n / static_cast<double>(factor));
     }
   }
-  cout<<factor<<endl;
-  return 0;
+  return factor;
 }
+
+#include "boilermain.cpp"

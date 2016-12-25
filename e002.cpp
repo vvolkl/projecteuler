@@ -1,7 +1,7 @@
 
 int solve() {
-  int a = 1; //< first fibonacchi number
-  int b = 1; //< second fibonacchi number
+  int a = 1; ///< first fibonacchi number
+  int b = 1; ///< second fibonacchi number
   int result = 0;
   const int limit = 4000000;
   while(a < limit) {

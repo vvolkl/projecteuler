@@ -1,4 +1,5 @@
-#include "Eigen/Dense"
+
+#include <Eigen/Dense>
 
 template <typename T>
 T sumMultiples(T A, T B, T upTo) {
