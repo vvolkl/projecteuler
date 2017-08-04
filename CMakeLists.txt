@@ -4,16 +4,16 @@ project(projecteuler CXX Fortran)
 
 enable_testing()
 
-#set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-#find_package(GMP REQUIRED)
 find_package(Eigen3 REQUIRED)
 
-set(CMAKE_CXX_FLAGS "-std=c++14 -O2 -Wall -pedantic")
-file(GLOB files e*.cpp)
-list(SORT files)
+set(CMAKE_CXX_FLAGS "-std=c++14 -O2 -Wall -pedantic") 
+
+### build and test c++ files
+file(GLOB files e*.cpp) # get files by extension
+list(SORT files) 
 foreach(file ${files}) 
-  get_filename_component(f ${file} NAME_WE)
-  add_executable(${f}.cppout ${file})
+  get_filename_component(f ${file} NAME_WE) # File name without directory or longest extension
+  add_executable(${f}.cppout ${file}) # build an exe
   ################# Include Eigen in the files that need it #########
   FILE(READ ${file} TMPTXT)
   STRING(FIND "${TMPTXT}" "Eigen" matchres)
@@ -25,19 +25,21 @@ foreach(file ${files})
            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 endforeach()
 
-file(GLOB files e*.py)
+### build and test python files
+file(GLOB files e*.py) # get files by extension
 list(SORT files)
 foreach(file ${files}) 
-  get_filename_component(f ${file} NAME_WE)
+  get_filename_component(f ${file} NAME_WE) # File name without directory or longest extension
   add_test(NAME py_${f} COMMAND python ${PROJECT_SOURCE_DIR}/pyrun.py ${f}
            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 endforeach()
 
 
+# build and test fortran files
 file(GLOB files e*.f90)
 list(SORT files)
 foreach(file ${files}) 
-  get_filename_component(f ${file} NAME_WE)
+  get_filename_component(f ${file} NAME_WE) # File name without directory or longest extension 
   add_executable(${f}.f90out ${file})
   add_test(NAME f90_${f} COMMAND ${PROJECT_SOURCE_DIR}/run.sh build/${f}.f90out
            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
