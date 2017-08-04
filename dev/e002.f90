@@ -5,7 +5,7 @@ recursive function fibsum(i,j,res,lim) result(k)
 ! if k does not exceed lim, the function proceeds to call itself with the new
 ! arguments
 integer, intent(in) :: i,j,res,lim
-integer :: k, res2
+integer :: k, res2, cache1
 ! fibonacci sequence
 k = i + j
 ! sum even terms of fibonacci series
@@ -25,6 +25,7 @@ if (k <= lim) then
         k = fibsum(i,k,res2,lim)
     end if
 !else ! we are done, write result 
+!  k = res2 - k
     !write(*,*) res2
 end if
 end function
@@ -34,5 +35,5 @@ end function
 program e002
 implicit none
 integer :: fibsum
-write(*,*) fibsum(1,2,2,4000000)
+write(*,"(I10)") fibsum(1,2,2,4000000)
 end program

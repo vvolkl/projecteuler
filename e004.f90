@@ -27,5 +27,6 @@ loop1: do i1 = 999,2,-1
         end if
     end do
 end do loop1
-write(*,*) 'largest palindrome of two 3-digit numbers: ', finalresult
+write(*,*) 'largest palindrome of two 3-digit numbers: '
+write(*,*) finalresult
 end program e004

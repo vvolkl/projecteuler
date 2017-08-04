@@ -1,7 +1,7 @@
 import numpy as np
 
 def solve(debug=False):
-    data = np.loadtxt('e011.dat', dtype=np.int)
+    data = np.loadtxt('e011.txt', dtype=np.int)
     result = 0
     # check rows and columns
     for dat in [data, np.transpose(data)]:
