@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(projecteuler CXX Fortran)
+project(projecteuler CXX)
 
 enable_testing()
 
@@ -9,6 +9,10 @@ enable_testing()
 find_package(Eigen3 REQUIRED)
 
 set(CMAKE_CXX_FLAGS "-std=c++14 -O2 -Wall -pedantic")
+
+option(BUILDCPP "option for building cpp solutions" ON)
+
+if(${BUILDCPP})
 file(GLOB files e*.cpp)
 list(SORT files)
 foreach(file ${files}) 
@@ -24,6 +28,7 @@ foreach(file ${files})
   add_test(NAME cpp_${f} COMMAND ${PROJECT_SOURCE_DIR}/run.sh build/${f}.cppout
            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 endforeach()
+endif()
 
 file(GLOB files e*.py)
 list(SORT files)
@@ -34,6 +39,9 @@ foreach(file ${files})
 endforeach()
 
 
+option(BUILDFORTRAN "option for building fortran solutions" ON)
+if(${BUILDFORTRAN})
+enable_language(Fortran)
 file(GLOB files e*.f90)
 list(SORT files)
 foreach(file ${files}) 
@@ -42,3 +50,4 @@ foreach(file ${files})
   add_test(NAME f90_${f} COMMAND ${PROJECT_SOURCE_DIR}/run.sh build/${f}.f90out
            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 endforeach()
+endif()
