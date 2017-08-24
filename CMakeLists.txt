@@ -1,16 +1,21 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(projecteuler CXX Fortran)
+project(projecteuler CXX)
 
 enable_testing()
 
 find_package(Eigen3 REQUIRED)
 
-set(CMAKE_CXX_FLAGS "-std=c++14 -O2 -Wall -pedantic") 
+
+list(SORT files) 
+set(CMAKE_CXX_FLAGS "-std=c++14 -O2 -Wall -pedantic")
+
+option(BUILDCPP "option for building cpp solutions" ON)
 
 ### build and test c++ files
+if(${BUILDCPP})
 file(GLOB files e*.cpp) # get files by extension
-list(SORT files) 
+list(SORT files)
 foreach(file ${files}) 
   get_filename_component(f ${file} NAME_WE) # File name without directory or longest extension
   add_executable(${f}.cppout ${file}) # build an exe
@@ -24,6 +29,7 @@ foreach(file ${files})
   add_test(NAME cpp_${f} COMMAND ${PROJECT_SOURCE_DIR}/run.sh build/${f}.cppout
            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 endforeach()
+endif()
 
 ### build and test python files
 file(GLOB files e*.py) # get files by extension
@@ -36,6 +42,9 @@ endforeach()
 
 
 # build and test fortran files
+option(BUILDFORTRAN "option for building fortran solutions" ON)
+if(${BUILDFORTRAN})
+enable_language(Fortran)
 file(GLOB files e*.f90)
 list(SORT files)
 foreach(file ${files}) 
@@ -44,3 +53,4 @@ foreach(file ${files})
   add_test(NAME f90_${f} COMMAND ${PROJECT_SOURCE_DIR}/run.sh build/${f}.f90out
            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 endforeach()
+endif()

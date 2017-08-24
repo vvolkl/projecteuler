@@ -4,7 +4,7 @@ int solve() {
   int b = 1; ///< second fibonacchi number
   int result = 0;
   const int limit = 4000000;
-  while(a < limit) {
+  while(a < limit && b < limit) {
     a = a + b;
     if (a % 2 == 0) {
       result += a;
@@ -13,10 +13,6 @@ int solve() {
     if (b % 2 == 0) {
       result += b;
     }
-  }
-  // correct for last term if it is already over the limit
-  if(b > limit && b % 2 == 0) {
-    result -= b;
   }
   return result;
 }
