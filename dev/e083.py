@@ -29,7 +29,7 @@ def weighted_values(values, probabilities, total, size):
     return values[np.digitize(random_integers(1, high=total-1,size=size), bins)] 
 
 
-m = np.loadtxt('matrix.txt', delimiter=',', dtype=int)
+m = np.loadtxt('e083_matrix.txt', delimiter=',', dtype=int)
 p = np.zeros(m.shape, dtype=int)
 c = np.zeros(m.shape, dtype=int)
 maxentry = np.amax(m)
