@@ -9,8 +9,8 @@ def all_rotations(s):
 
 def solve(n=1000000, verbose=False):
     results = []
-    for num in range(2,n):
-        if is_prime(num) and num not in results:
+    for num in sieve(n):
+        if num not in results:
             if verbose:
                 print "checking prime %i for circularity ..." % num
             relevant = True
