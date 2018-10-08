@@ -1,6 +1,7 @@
 #include <string>
 #include <algorithm>
 
+
 using namespace std;
 
 int isPalindrome(int candidate) {
@@ -9,6 +10,11 @@ int isPalindrome(int candidate) {
     reverse(s1.begin(), s1.end());
     return s1 == s2;
 }
+/** print solution to project euler problem 4
+    finds the largest palindronic number that is a product of two three-digit numbers.
+    Algorithm:
+      Check if the product is palindronic for every combination of factors
+**/
 
 int solve() {
     int factor1, factor2, result, palindromeCandidate;
