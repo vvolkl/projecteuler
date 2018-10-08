@@ -25,7 +25,7 @@ foreach(file ${files})
     include_directories(${EIGEN3_INCLUDE_DIR})
   ENDIF()
   ###################################################################
-  add_test(NAME cpp_${f} COMMAND ${PROJECT_SOURCE_DIR}/run.sh build/${f}.cppout
+  add_test(NAME cpp_${f} COMMAND ${PROJECT_SOURCE_DIR}/run.sh ${CMAKE_CURRENT_BINARY_DIR}/${f}.cppout
            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 endforeach()
 endif()
@@ -49,7 +49,7 @@ list(SORT files)
 foreach(file ${files}) 
   get_filename_component(f ${file} NAME_WE) # File name without directory or longest extension 
   add_executable(${f}.f90out ${file})
-  add_test(NAME f90_${f} COMMAND ${PROJECT_SOURCE_DIR}/run.sh build/${f}.f90out
+  add_test(NAME f90_${f} COMMAND ${PROJECT_SOURCE_DIR}/run.sh ${CMAKE_CURRENT_BINARY_DIR}/${f}.f90out
            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 endforeach()
 endif()
