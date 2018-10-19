@@ -1,24 +1,16 @@
 
-#include <Eigen/Dense>
+#include "stdio.h"
 
-template <typename T>
-T sumMultiples(T A, T B, T upTo) {
-  T result = 0;
-  for(T i=0; i < upTo; ++i) {
-    if ( !(i % A) || !(i % B)) {
+
+
+int main() {
+  int result = 0;
+  for(int i=0; i < 1000; ++i) {
+    if ( !(i % 3) || !(i % 5)) {
       result += i;
     }
   }
-  return result;
+  printf("%d\n",result);
+  return 0;
 }
 
-
-int solve() {
-   int A = 3;
-   int B = 5;
-   int upTo = 1000;
-   int result = sumMultiples<int>(A, B, upTo);
-  return result;
-}
-
-#include "boilermain.cpp"
