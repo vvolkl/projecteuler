@@ -40,6 +40,20 @@ foreach(file ${files})
 endforeach()
 
 
+### build and test c++ files
+option(BUILDASSEMBLY "option for building assembler solutions" ON)
+if(${BUILDASSEMBLY})
+enable_language(C ASM)
+file(GLOB files e*.s) # get files by extension
+list(SORT files)
+foreach(file ${files}) 
+  get_filename_component(f ${file} NAME_WE) # File name without directory or longest extension
+  add_executable(${f}.sout ${file}) # build an exe
+  add_test(NAME s_${f} COMMAND ${PROJECT_SOURCE_DIR}/run.sh ${CMAKE_CURRENT_BINARY_DIR}/${f}.sout
+           WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+endforeach()
+endif()
+
 # build and test fortran files
 option(BUILDFORTRAN "option for building fortran solutions" ON)
 if(${BUILDFORTRAN})
