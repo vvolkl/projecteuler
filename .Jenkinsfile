@@ -10,7 +10,12 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing..'
-                sh "make test"
+                sh """
+                pwd
+                ls
+                cd build
+                make test
+                """"
             }
         }
         stage('Deploy') {
