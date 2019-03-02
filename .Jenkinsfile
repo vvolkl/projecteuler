@@ -10,12 +10,9 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing..'
-                sh """
-                pwd
-                ls
-                cd build
-                make test
-                """"
+                sh "pwd"
+                sh "ls"
+                sh "cd build && make test"
             }
         }
         stage('Deploy') {
