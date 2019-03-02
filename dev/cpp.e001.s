@@ -1,4 +1,5 @@
 	.file	"e001.cpp"
+	.text
 	.section	.rodata
 .LC0:
 	.string	"%d\n"
@@ -57,9 +58,9 @@ main:
 .L2:
 	movl	-8(%rbp), %eax
 	movl	%eax, %esi
-	movl	$.LC0, %edi
+	leaq	.LC0(%rip), %rdi
 	movl	$0, %eax
-	call	printf
+	call	printf@PLT
 	movl	$0, %eax
 	leave
 .LCFI2:
@@ -77,7 +78,7 @@ main:
 	.sleb128 -8
 	.uleb128 0x10
 	.uleb128 0x1
-	.byte	0x3
+	.byte	0x1b
 	.byte	0xc
 	.uleb128 0x7
 	.uleb128 0x8
@@ -89,7 +90,7 @@ main:
 	.long	.LEFDE1-.LASFDE1
 .LASFDE1:
 	.long	.LASFDE1-.Lframe1
-	.long	.LFB0
+	.long	.LFB0-.
 	.long	.LFE0-.LFB0
 	.uleb128 0
 	.byte	0x4
@@ -109,5 +110,5 @@ main:
 	.uleb128 0x8
 	.align 8
 .LEFDE1:
-	.ident	"GCC: (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609"
+	.ident	"GCC: (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0"
 	.section	.note.GNU-stack,"",@progbits

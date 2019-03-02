@@ -7,7 +7,9 @@ enable_testing()
 find_package(Eigen3 REQUIRED)
 
 
-set(CMAKE_CXX_FLAGS "-std=c++14 -O2 -Wall -pedantic")
+set(CMAKE_CXX_STANDARD 14)
+
+set(CMAKE_CXX_FLAGS "-O2 -Wall -pedantic")
 
 option(BUILDCPP "option for building cpp solutions" ON)
 
