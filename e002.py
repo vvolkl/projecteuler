@@ -1,5 +1,3 @@
-import numpy as np
-
 
 def sumEvenFibonacci(up_to=4e6):
     even_terms_sum = 0
