@@ -7,6 +7,6 @@ do i=1,999
     res = res + i
     end if
 end do
-write(*,*)res
+print *,res
 stop
 end program e001
