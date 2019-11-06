@@ -1,4 +1,5 @@
 #include <unordered_set>
+#include <bitset>
 /*** Simple implementation of Conways's Game of Life
 * 
 * the state is held by 'board' a two dimensional array of booleans
@@ -19,7 +20,12 @@ public:
   }
 
   size_t hasharray() {
-    return boost::hash_range(&board[0][0], &board[0][0]+(N*N));
+    size_t seed = 0;
+    for (size_t i = 0; i < N; i++) {
+      size_t hash_value = std::hash<std::bitset<N>>{}(board[i]);
+      seed ^= hash_value + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    }
+    return seed;
   }
 
   void initialize_glider() {
@@ -31,7 +37,7 @@ public:
     board [10][10] = ALIVE;
     board [11][10] = ALIVE;
     board [12][10] = ALIVE;
-    std::memcpy(board_new, board, sizeof(board));
+    std::copy(board.begin(), board.end(), board_new.begin());
   }
 
   void initialize() {
@@ -40,7 +46,7 @@ public:
         board[i][j] = DEAD;
       }
     }
-    std::memcpy(board_new, board, sizeof(board));
+    std::copy(board.begin(), board.end(), board_new.begin());
   }
 
   void run() {
@@ -65,7 +71,7 @@ public:
         board[i][j] = random_distribution(random_engine) < initial_fill_fraction;
       }
     }
-    std::memcpy(board_new, board, sizeof(board));
+    std::copy(board.begin(), board.end(), board_new.begin());
   }
 
   void evolve() {
@@ -94,7 +100,7 @@ public:
       } // j
     } // i
     // move updated board back
-    std::memcpy(board, board_new, sizeof(board));
+    std::copy(board_new.begin(), board_new.end(), board.begin());
   }
 
   unsigned int count_live_cells() {
@@ -111,8 +117,8 @@ public:
   static constexpr size_t max_cache_size = 10000;
   std::unordered_set<size_t> hash_cache; 
   static constexpr unsigned int N_CELLS = N;
-  bool board_new[N_CELLS][N_CELLS];
-  unsigned char board[N_CELLS][N_CELLS];
+  std::array<std::bitset<N>, N> board_new;
+  std::array<std::bitset<N>, N> board;
   enum GOL {DEAD, ALIVE}; 
   bool done;
 
