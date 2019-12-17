@@ -81,7 +81,7 @@ void draw() {
     GameOfLifeWindow *o = (GameOfLifeWindow*)userdata;
     if ((*o).done == false) {
       o->redraw();
-      Fl::repeat_timeout(0.04, Timer_CB, userdata);
+      Fl::repeat_timeout(0.02, Timer_CB, userdata);
     }
   }
 
