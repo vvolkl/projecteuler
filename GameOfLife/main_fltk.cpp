@@ -16,42 +16,36 @@
 
 #include "game_of_life_cpp.h"
 
-
 constexpr int CIRC_COLOR = 0;
 constexpr int TICK_COLOR = 50;
 constexpr int BG_COLOR = 45;
 constexpr int window_width = 840;
 constexpr int window_height = 840;
-constexpr int margin = 20;
+constexpr int window_margin = 20;
 constexpr int box_margin = 1;
-constexpr int n_boxes = 200;
-constexpr int box_width = (window_width - 1* margin - n_boxes * box_margin) / n_boxes;
-
-
-
+constexpr int N_CELLS = 200;
+constexpr int box_width = (window_width - window_margin - N_CELLS * box_margin) / N_CELLS;
 
 class GameOfLifeWindow : public Fl_Box {
-
 public:
-
   GameOfLifeWindow(int X,int Y,int W,int H,float initial_fill_fraction,const char*L=0) : Fl_Box(X,Y,W,H,L) {
     box(FL_FLAT_BOX);
     color(BG_COLOR);
     Fl::add_timeout(1, Timer_CB, (void*)this);
     gol.initialize();
     gol.initialize_random(initial_fill_fraction);
-}
+  }
 
 void draw() {
     // tell base widget to draw its background
     Fl_Box::draw();
     fl_color(CIRC_COLOR);
-    for (int i = 0; i < n_boxes; i++) {
-      for (int j = 0; j < n_boxes; j++) {
+    for (int i = 0; i < N_CELLS; i++) {
+      for (int j = 0; j < N_CELLS; j++) {
         // draw game of life
         fl_draw_box(FL_FLAT_BOX, 
-          margin + i * box_width + i * box_margin, 
-          margin + j * box_width + j * box_margin, 
+          window_margin + i * box_width + i * box_margin, 
+          window_margin + j * box_width + j * box_margin, 
           box_width, 
           box_width, 
           gol.board[i][j] * 2);
@@ -72,8 +66,6 @@ void draw() {
       std::cout << "done" << std::endl;
       done = true;
     }
-    
-
     counter ++;
   }
 
@@ -85,15 +77,13 @@ void draw() {
     }
   }
 
-  GameOfLife<n_boxes> gol;
+  GameOfLife<N_CELLS> gol;
 
 private:
-
-  unsigned char board_display[2*n_boxes][2*n_boxes];
+  unsigned char board_display[2*N_CELLS][2*N_CELLS];
   unsigned int counter = 0;
   std::unordered_set<size_t> hash_cache; 
   bool done = false;
-
 };
 
 int main(int argc, char** argv) {
