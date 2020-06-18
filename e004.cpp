@@ -15,7 +15,6 @@ int isPalindrome(int candidate) {
     Algorithm:
       Check if the product is palindronic for every combination of factors
 **/
-
 int solve() {
     int factor1, factor2, result, palindromeCandidate;
     result = 1;

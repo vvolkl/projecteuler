@@ -1,7 +1,4 @@
-
 #include "stdio.h"
-
-
 
 int main() {
   int result = 0;

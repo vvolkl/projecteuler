@@ -4,7 +4,7 @@ import os
 
 problem  = __import__(sys.argv[1])
 problemnumber = sys.argv[1].replace('e', '')
-problemnumber = int(problemnumber)
+problemnumber = int(problemnumber.split('-')[0])
 solution = problem.solve()
 os.system( './projecteuler_check_answer.sh  %i %i' %
             (problemnumber, solution))
