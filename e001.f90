@@ -8,5 +8,6 @@ do i=1,999
     end if
 end do
 print *,res
+PRINT '("",I0)', res
 stop
 end program e001
