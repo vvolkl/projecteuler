@@ -1,5 +1,9 @@
 #include <unordered_set>
 #include <bitset>
+#include <tuple>
+#include <array>
+#include <random>
+#include "time.h"
 /*** Simple implementation of Conways's Game of Life
 * 
 * the state is held by 'board' a two dimensional array of booleans
